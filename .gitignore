@@ -1,0 +1,9 @@
+/build/
+/elm-stuff/
+/tmp/
+
+/index.html
+
+*-old/
+
+!.gitkeep
