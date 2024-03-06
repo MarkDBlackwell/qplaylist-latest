@@ -18,7 +18,6 @@ type alias LatestFiveJsonRoot =
 
 type alias Model =
     { channel : Channel
-    , overallState : OverallState
     , songsCurrent : Songs
     }
 
@@ -47,10 +46,6 @@ type Msg
     | GotTimeTick Time.Posix
 
 
-type OverallState
-    = Idle
-
-
 slotsCount : Int
 slotsCount =
     5
@@ -63,7 +58,6 @@ slotsCount =
 init : Channel -> ( Model, Cmd Msg )
 init channel =
     ( { channel = channel
-      , overallState = Idle
       , songsCurrent = songsCurrentInit
       }
     , Cmd.none
@@ -86,11 +80,9 @@ songsCurrentInit =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model.overallState of
-        Idle ->
-            let
-                delaySeconds : Float
-                delaySeconds =
-                    20.0
-            in
-            Time.every (delaySeconds * 1000.0) GotTimeTick
+    let
+        delaySeconds : Float
+        delaySeconds =
+            20.0
+    in
+    Time.every (delaySeconds * 1000.0) GotTimeTick

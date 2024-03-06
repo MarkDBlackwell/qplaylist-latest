@@ -75,14 +75,8 @@ update msg model =
                         commands : Cmd M.Msg
                         commands =
                             Cmd.none
-
-                        overallState : M.OverallState
-                        overallState =
-                            M.Idle
                     in
-                    ( { model
-                        | overallState = overallState
-                      }
+                    ( model
                     , commands
                     )
 
