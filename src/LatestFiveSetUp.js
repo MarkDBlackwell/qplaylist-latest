@@ -9,14 +9,14 @@ Copyright (C) 2024 Mark D. Blackwell.
 'use strict';
 
 (function() {
-	const regexp = /LatestFiveLike(.*)\.html$/;
+	const regexp = /LatestFiveNew(.*)\.html$/;
 	const channel = window.location.pathname.match(regexp)[1];
 	const node = document.querySelector('main');
 
 	const functionConsoleWarningPreventAndLoad = function(channel, node) {
 //In Firefox, the warning was, "Layout was forced before the page."
 		window.addEventListener('load', function() {
-			const appElm = Elm.Main.init(
+			const appElm = Elm.LatestFiveMain.init(
 				{
 					flags: channel,
 					node: node,

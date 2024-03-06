@@ -1,4 +1,4 @@
-module Main exposing (main)
+module LatestFiveMain exposing (main)
 
 import Browser
 import Http
