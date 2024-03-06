@@ -71,16 +71,13 @@ update msg model =
                     )
 
                 Ok songsCurrent ->
-                    let
-                        commands : Cmd M.Msg
-                        commands =
-                            Cmd.none
-                    in
-                    ( model
-                    , commands
+                    ( { model
+                        | songsCurrent = songsCurrent
+                      }
+                    , Cmd.none
                     )
 
-        M.GotTimeTick timePosix ->
+        M.GotTimeTick _ ->
             ( model
             , latestFiveGet model
             )

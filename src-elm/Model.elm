@@ -1,6 +1,7 @@
 module Model exposing (..)
 
 import Http
+import Task
 import Time
 
 
@@ -46,6 +47,17 @@ type Msg
     | GotTimeTick Time.Posix
 
 
+cmdMsg2Cmd : Msg -> Cmd Msg
+cmdMsg2Cmd msg =
+    --See:
+    --  http://github.com/billstclair/elm-dynamodb/blob/7ac30d60b98fbe7ea253be13f5f9df4d9c661b92/src/DynamoBackend.elm
+    --For wrapping a message as a Cmd:
+    msg
+        |> Task.succeed
+        |> Task.perform
+            identity
+
+
 slotsCount : Int
 slotsCount =
     5
@@ -60,7 +72,9 @@ init channel =
     ( { channel = channel
       , songsCurrent = songsCurrentInit
       }
-    , Cmd.none
+    , Time.millisToPosix 0
+        |> GotTimeTick
+        |> cmdMsg2Cmd
     )
 
 
@@ -85,4 +99,5 @@ subscriptions model =
         delaySeconds =
             20.0
     in
+    --The first tick happens after the delay.
     Time.every (delaySeconds * 1000.0) GotTimeTick
