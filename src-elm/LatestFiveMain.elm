@@ -77,7 +77,23 @@ update msg model =
                     , Cmd.none
                     )
 
+        M.GotTimeStart timeStart ->
+            let
+                delaySeconds : Int
+                delaySeconds =
+                    30
+
+            in
+            ( { model
+                | delaySeconds = delaySeconds
+                , timeStart = timeStart
+              }
+            , latestFiveGet model
+            )
+
         M.GotTimeTick _ ->
-            ( model
+            ( { model
+                | delaySeconds = M.delaySecondsStandard
+              }
             , latestFiveGet model
             )

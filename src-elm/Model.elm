@@ -19,7 +19,9 @@ type alias LatestFiveJsonRoot =
 
 type alias Model =
     { channel : Channel
+    , delaySeconds : Int
     , songsCurrent : Songs
+    , timeStart : Time.Posix
     }
 
 
@@ -44,18 +46,13 @@ type alias Title =
 
 type Msg
     = GotSongsResponse (Result Http.Error Songs)
+    | GotTimeStart Time.Posix
     | GotTimeTick Time.Posix
 
 
-cmdMsg2Cmd : Msg -> Cmd Msg
-cmdMsg2Cmd msg =
-    --See:
-    --  http://github.com/billstclair/elm-dynamodb/blob/7ac30d60b98fbe7ea253be13f5f9df4d9c661b92/src/DynamoBackend.elm
-    --For wrapping a message as a Cmd:
-    msg
-        |> Task.succeed
-        |> Task.perform
-            identity
+delaySecondsStandard : Int
+delaySecondsStandard =
+    20
 
 
 slotsCount : Int
@@ -70,11 +67,11 @@ slotsCount =
 init : Channel -> ( Model, Cmd Msg )
 init channel =
     ( { channel = channel
+      , delaySeconds = 0
       , songsCurrent = songsCurrentInit
+      , timeStart = Time.millisToPosix 0
       }
-    , Time.millisToPosix 0
-        |> GotTimeTick
-        |> cmdMsg2Cmd
+    , Task.perform GotTimeStart Time.now
     )
 
 
@@ -95,9 +92,18 @@ songsCurrentInit =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     let
-        delaySeconds : Float
-        delaySeconds =
-            20.0
+        subs : Sub Msg
+        subs =
+            let
+                delay : Float
+                delay =
+                    toFloat (model.delaySeconds * 1000)
+            in
+            if Time.posixToMillis model.timeStart < 1000 then
+                Sub.none
+
+            else
+                --The first tick happens after the delay.
+                Time.every delay GotTimeTick
     in
-    --The first tick happens after the delay.
-    Time.every (delaySeconds * 1000.0) GotTimeTick
+    subs
