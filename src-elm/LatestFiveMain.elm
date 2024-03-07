@@ -78,14 +78,8 @@ update msg model =
                     )
 
         M.GotTimeStart timeStart ->
-            let
-                delaySeconds : Int
-                delaySeconds =
-                    30
-
-            in
             ( { model
-                | delaySeconds = delaySeconds
+                | delaySeconds = M.delaySecondsFirst model
                 , timeStart = timeStart
               }
             , latestFiveGet model

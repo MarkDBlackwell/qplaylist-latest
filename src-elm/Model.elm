@@ -50,9 +50,22 @@ type Msg
     | GotTimeTick Time.Posix
 
 
+delaySecondsFirst : Model -> Int
+delaySecondsFirst model =
+    let
+        secondsOver : Int
+        secondsOver =
+            model.timeStart
+                |> Time.posixToMillis
+                |> (//) 1000
+                |> modBy delaySecondsStandard
+    in
+    2 * delaySecondsStandard - secondsOver
+
+
 delaySecondsStandard : Int
 delaySecondsStandard =
-    20
+    60
 
 
 slotsCount : Int
@@ -92,11 +105,11 @@ songsCurrentInit =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     let
-        subs : Sub Msg
-        subs =
+        timer : Sub Msg
+        timer =
             let
-                delay : Float
-                delay =
+                milliseconds : Float
+                milliseconds =
                     toFloat (model.delaySeconds * 1000)
             in
             if Time.posixToMillis model.timeStart < 1000 then
@@ -104,6 +117,6 @@ subscriptions model =
 
             else
                 --The first tick happens after the delay.
-                Time.every delay GotTimeTick
+                Time.every milliseconds GotTimeTick
     in
-    subs
+    timer
