@@ -21,7 +21,7 @@ type alias Model =
     { channel : Channel
     , delaySeconds : Int
     , songsCurrent : Songs
-    , timeStart : Time.Posix
+    , timeNow : Time.Posix
     }
 
 
@@ -46,26 +46,8 @@ type alias Title =
 
 type Msg
     = GotSongsResponse (Result Http.Error Songs)
-    | GotTimeStart Time.Posix
-    | GotTimeTick Time.Posix
-
-
-delaySecondsFirst : Model -> Int
-delaySecondsFirst model =
-    let
-        secondsOver : Int
-        secondsOver =
-            model.timeStart
-                |> Time.posixToMillis
-                |> (//) 1000
-                |> modBy delaySecondsStandard
-    in
-    2 * delaySecondsStandard - secondsOver
-
-
-delaySecondsStandard : Int
-delaySecondsStandard =
-    60
+    | GotTimeNow Time.Posix
+    | GotTimer Time.Posix
 
 
 slotsCount : Int
@@ -79,23 +61,23 @@ slotsCount =
 
 init : Channel -> ( Model, Cmd Msg )
 init channel =
+    let
+        songsCurrentInit : Songs
+        songsCurrentInit =
+            let
+                songEmpty : Song
+                songEmpty =
+                    Song "" "" ""
+            in
+            List.repeat slotsCount songEmpty
+    in
     ( { channel = channel
       , delaySeconds = 0
       , songsCurrent = songsCurrentInit
-      , timeStart = Time.millisToPosix 0
+      , timeNow = Time.millisToPosix 0
       }
-    , Task.perform GotTimeStart Time.now
+    , Task.perform GotTimer Time.now
     )
-
-
-songsCurrentInit : Songs
-songsCurrentInit =
-    let
-        songEmpty : Song
-        songEmpty =
-            Song "" "" ""
-    in
-    List.repeat slotsCount songEmpty
 
 
 
@@ -111,12 +93,16 @@ subscriptions model =
                 milliseconds : Float
                 milliseconds =
                     toFloat (model.delaySeconds * 1000)
+
+                timeNotSet : Bool
+                timeNotSet =
+                    Time.posixToMillis model.timeNow < 1000
             in
-            if Time.posixToMillis model.timeStart < 1000 then
+            if timeNotSet then
                 Sub.none
 
             else
                 --The first tick happens after the delay.
-                Time.every milliseconds GotTimeTick
+                Time.every milliseconds GotTimer
     in
     timer

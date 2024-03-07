@@ -5,6 +5,8 @@ import Http
 import Json.Decode as D
 import Model as M
 import Port as P
+import Task
+import Time
 import View
 
 
@@ -60,8 +62,6 @@ update msg model =
             case songsResult of
                 Err err ->
                     let
-                        --ignored =
-                        --Debug.log message err
                         message : String
                         message =
                             "songsResult error"
@@ -74,20 +74,49 @@ update msg model =
                     ( { model
                         | songsCurrent = songsCurrent
                       }
-                    , Cmd.none
+                    , Task.perform M.GotTimeNow Time.now
                     )
 
-        M.GotTimeStart timeStart ->
+        M.GotTimeNow timeNow ->
+            let
+                delaySeconds : Int
+                delaySeconds =
+                    let
+                        over : Int
+                        over =
+                            let
+                                start : Int
+                                start =
+                                    Time.posixToMillis timeNow // 1000
+                            in
+                            start
+                                |> modBy standard
+
+                        phase : Int
+                        phase =
+                            if String.isEmpty model.channel then
+                                0
+
+                            else
+                                standard // 2
+
+                        standard : Int
+                        standard =
+                            60
+                    in
+                    standard - over + phase
+            in
             ( { model
-                | delaySeconds = M.delaySecondsFirst model
-                , timeStart = timeStart
+                | delaySeconds = delaySeconds
+                , timeNow = timeNow
               }
-            , latestFiveGet model
+            , Cmd.none
             )
 
-        M.GotTimeTick _ ->
-            ( { model
-                | delaySeconds = M.delaySecondsStandard
-              }
-            , latestFiveGet model
+        M.GotTimer _ ->
+            ( model
+            , Cmd.batch
+                [ Task.perform M.GotTimeNow Time.now
+                , latestFiveGet model
+                ]
             )
