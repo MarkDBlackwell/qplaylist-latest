@@ -4,8 +4,8 @@
 module LatestFiveMain exposing (main)
 
 import Browser
+import Decode as D
 import Http
-import Json.Decode as D
 import Model as M
 import Port as P
 import Task
@@ -43,28 +43,9 @@ latestFiveGet model =
                 ]
     in
     Http.get
-        { expect = Http.expectJson M.GotSongsResponse latestFiveJsonDecoder
+        { expect = Http.expectJson M.GotSongsResponse D.latestFiveJsonDecoder
         , url = url
         }
-
-
-
--- DECODE
---TODO: Move decoding to its own module, Decode.
-
-
-latestFiveJsonDecoder : D.Decoder M.Songs
-latestFiveJsonDecoder =
-    D.map (List.take M.slotsCount << .latestFive << M.LatestFiveJsonRoot)
-        (D.field "latestFive" <| D.list songJsonDecoder)
-
-
-songJsonDecoder : D.Decoder M.Song
-songJsonDecoder =
-    D.map3 M.Song
-        (D.field "artist" D.string)
-        (D.field "time" D.string)
-        (D.field "title" D.string)
 
 
 
