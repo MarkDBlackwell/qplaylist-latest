@@ -27,12 +27,6 @@ latestFiveGet model =
         }
 
 
-latestFiveJsonDecoder : D.Decoder M.Songs
-latestFiveJsonDecoder =
-    D.map (List.take M.slotsCount << .latestFive << M.LatestFiveJsonRoot)
-        (D.field "latestFive" <| D.list songJsonDecoder)
-
-
 main : Program M.Channel M.Model M.Msg
 main =
     Browser.element
@@ -41,6 +35,16 @@ main =
         , subscriptions = M.subscriptions
         , view = View.view
         }
+
+
+
+-- DECODE
+
+
+latestFiveJsonDecoder : D.Decoder M.Songs
+latestFiveJsonDecoder =
+    D.map (List.take M.slotsCount << .latestFive << M.LatestFiveJsonRoot)
+        (D.field "latestFive" <| D.list songJsonDecoder)
 
 
 songJsonDecoder : D.Decoder M.Song

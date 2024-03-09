@@ -17,14 +17,6 @@ type alias LatestFiveJsonRoot =
     { latestFive : Songs }
 
 
-type alias Model =
-    { channel : Channel
-    , delaySeconds : Int
-    , songsCurrent : Songs
-    , timeNow : Time.Posix
-    }
-
-
 type alias Song =
     { artist : Artist
     , time : SongTime
@@ -44,15 +36,27 @@ type alias Title =
     String
 
 
+slotsCount : Int
+slotsCount =
+    5
+
+
+
+-- ELM ARCHITECTURE
+
+
+type alias Model =
+    { channel : Channel
+    , delaySeconds : Int
+    , songsCurrent : Songs
+    , timeNow : Time.Posix
+    }
+
+
 type Msg
     = GotSongsResponse (Result Http.Error Songs)
     | GotTimeNow Time.Posix
     | GotTimer Time.Posix
-
-
-slotsCount : Int
-slotsCount =
-    5
 
 
 
