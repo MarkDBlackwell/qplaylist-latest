@@ -1,7 +1,4 @@
---TODO: Rename to Main, but keep the compiler output as LatestFiveMain.js.
-
-
-module LatestFiveMain exposing (main)
+module Main exposing (main)
 
 import Browser
 import Decode as D
