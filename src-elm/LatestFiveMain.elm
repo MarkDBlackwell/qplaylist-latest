@@ -1,3 +1,6 @@
+--TODO: Rename to Main, but keep the compiler output as LatestFiveMain.js.
+
+
 module LatestFiveMain exposing (main)
 
 import Browser
@@ -39,6 +42,7 @@ main =
 
 
 -- DECODE
+--TODO: Move decoding to its own module, Decode.
 
 
 latestFiveJsonDecoder : D.Decoder M.Songs
