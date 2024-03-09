@@ -4,7 +4,6 @@ import Browser
 import Decode as D
 import Http
 import Model as M
-import Port as P
 import Task
 import Time
 import View
@@ -55,13 +54,8 @@ update msg model =
         M.GotSongsResponse songsResult ->
             case songsResult of
                 Err err ->
-                    let
-                        message : String
-                        message =
-                            "songsResult error"
-                    in
                     ( model
-                    , P.logConsole message
+                    , Cmd.none
                     )
 
                 Ok songsCurrent ->
