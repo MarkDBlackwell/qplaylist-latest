@@ -5,42 +5,6 @@ import Task
 import Time
 
 
-type alias Artist =
-    String
-
-
-type alias Channel =
-    String
-
-
-type alias LatestFiveJsonRoot =
-    { latestFive : Songs }
-
-
-type alias Song =
-    { artist : Artist
-    , time : SongTime
-    , title : Title
-    }
-
-
-type alias Songs =
-    List Song
-
-
-type alias SongTime =
-    String
-
-
-type alias Title =
-    String
-
-
-slotsCount : Int
-slotsCount =
-    5
-
-
 
 -- ELM ARCHITECTURE
 
@@ -82,6 +46,46 @@ init channel =
       }
     , Task.perform GotTimer Time.now
     )
+
+
+
+-- APPLICATION-SPECIFIC
+
+
+type alias Artist =
+    String
+
+
+type alias Channel =
+    String
+
+
+type alias LatestFiveJsonRoot =
+    { latestFive : Songs }
+
+
+type alias Song =
+    { artist : Artist
+    , time : SongTime
+    , title : Title
+    }
+
+
+type alias Songs =
+    List Song
+
+
+type alias SongTime =
+    String
+
+
+type alias Title =
+    String
+
+
+slotsCount : Int
+slotsCount =
+    5
 
 
 
