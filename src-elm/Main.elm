@@ -6,6 +6,7 @@ import Http
 import Model as M
 import Task
 import Time
+import Url.Builder as U
 import View
 
 
@@ -32,11 +33,18 @@ latestFiveGet model =
     let
         url : String
         url =
-            String.concat
-                [ "../playlist/dynamic/LatestFive"
-                , model.channel
-                , ".json"
-                ]
+            let
+                basename : String
+                basename =
+                    String.concat
+                        [ "LatestFive"
+                        , model.channel
+                        , ".json"
+                        ]
+            in
+            U.relative
+                [ "..", "playlist", "dynamic", basename ]
+                []
     in
     Http.get
         { expect = Http.expectJson M.GotSongsResponse D.latestFiveJsonDecoder
