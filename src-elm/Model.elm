@@ -40,7 +40,7 @@ init channel =
             List.repeat slotsCount songEmpty
     in
     ( { channel = channel
-      , delaySeconds = 0
+      , delaySeconds = delayStandard
       , songsCurrent = songsCurrentInit
       , timeNow = Time.millisToPosix 0
       }
@@ -100,8 +100,8 @@ slotsCount =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     let
-        timer : Sub Msg
-        timer =
+        timerActivate : Sub Msg
+        timerActivate =
             let
                 milliseconds : Float
                 milliseconds =
@@ -119,4 +119,4 @@ subscriptions model =
                 --The first tick happens after the delay.
                 Time.every milliseconds GotTimer
     in
-    timer
+    timerActivate
