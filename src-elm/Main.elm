@@ -81,11 +81,16 @@ update msg model =
                         over : Int
                         over =
                             let
-                                start : Int
-                                start =
-                                    Time.posixToMillis timeNow // 1000
+                                nowSeconds : Int
+                                nowSeconds =
+                                    let
+                                        milliseconds : Int
+                                        milliseconds =
+                                            Time.posixToMillis timeNow
+                                    in
+                                    milliseconds // 1000
                             in
-                            start
+                            nowSeconds
                                 |> modBy standard
 
                         phase : Int
@@ -98,7 +103,7 @@ update msg model =
 
                         standard : Int
                         standard =
-                            60
+                            M.delayStandard
                     in
                     standard - over + phase
             in

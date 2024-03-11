@@ -83,6 +83,11 @@ type alias Title =
     String
 
 
+delayStandard : Int
+delayStandard =
+    60
+
+
 slotsCount : Int
 slotsCount =
     5

@@ -23,8 +23,8 @@ view model =
                         , songForKey.title
                         ]
 
-                lazySong : M.Song -> Html.Html M.Msg
-                lazySong song =
+                lazyViewSong : M.Song -> Html.Html M.Msg
+                lazyViewSong song =
                     Html.div
                         []
                         [ Html.p
@@ -38,7 +38,7 @@ view model =
                             [ Html.text song.artist ]
                         ]
             in
-            Html.Lazy.lazy lazySong songForKey
+            Html.Lazy.lazy lazyViewSong songForKey
                 |> Tuple.pair key
     in
     Html.Keyed.node
