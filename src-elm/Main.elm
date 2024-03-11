@@ -88,7 +88,7 @@ update msg model =
                                         milliseconds =
                                             Time.posixToMillis timeNow
                                     in
-                                    milliseconds // 1000
+                                    (milliseconds + 999) // 1000
 
                                 phase : Int
                                 phase =
