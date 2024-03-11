@@ -112,6 +112,7 @@ subscriptions model =
                     Time.posixToMillis model.timeNow < 1000
             in
             if timeNotSet then
+                --Only when the program is freshly loaded.
                 Sub.none
 
             else

@@ -89,23 +89,22 @@ update msg model =
                                             Time.posixToMillis timeNow
                                     in
                                     milliseconds // 1000
+
+                                phase : Int
+                                phase =
+                                    if String.isEmpty model.channel then
+                                        0
+
+                                    else
+                                        standard // 2
                             in
-                            nowSeconds
-                                |> modBy standard
-
-                        phase : Int
-                        phase =
-                            if String.isEmpty model.channel then
-                                0
-
-                            else
-                                standard // 2
+                            nowSeconds - phase |> modBy standard
 
                         standard : Int
                         standard =
                             M.delayStandard
                     in
-                    standard - over + phase |> modBy standard |> max 2
+                    standard - over
             in
             ( { model
                 | delaySeconds = delaySeconds
