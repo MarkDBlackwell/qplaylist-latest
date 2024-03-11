@@ -105,7 +105,7 @@ update msg model =
                         standard =
                             M.delayStandard
                     in
-                    standard - over + phase
+                    standard - over + phase |> modBy standard |> max 2
             in
             ( { model
                 | delaySeconds = delaySeconds
