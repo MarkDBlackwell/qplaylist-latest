@@ -38,12 +38,9 @@ view model =
                             [ Html.text song.artist ]
                         ]
             in
-            Html.Lazy.lazy lazyViewSong songForKey
-                |> Tuple.pair key
+            Tuple.pair key <| Html.Lazy.lazy lazyViewSong songForKey
     in
     Html.Keyed.node
         "main"
         []
-        (model.songsCurrent
-            |> List.map keyedSong
-        )
+        (List.map keyedSong model.songsCurrent)

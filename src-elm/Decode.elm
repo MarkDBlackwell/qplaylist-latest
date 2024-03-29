@@ -4,6 +4,11 @@ import Json.Decode as D
 import Model as M
 
 
+
+--Inspired by this JSON decoder generator:
+--https://noredink.github.io/json-to-elm/
+
+
 latestFiveJsonDecoder : D.Decoder M.Songs
 latestFiveJsonDecoder =
     let
